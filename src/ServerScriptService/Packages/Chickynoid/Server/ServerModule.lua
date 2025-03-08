@@ -664,9 +664,19 @@ function ServerModule:UpdatePlayerStatesToPlayers()
 			event.lastConfirmedCommand = playerRecord.chickynoid.lastConfirmedCommand
 			event.serverTime = self.serverSimulationTime
 			event.serverFrame = self.serverTotalFrames
-			event.playerStateDelta, event.playerStateDeltaFrame = playerRecord.chickynoid:ConstructPlayerStateDelta(self.serverTotalFrames)
 
-			playerRecord:SendUnreliableEventToClient(event)
+			local playerStateDelta, playerStateDeltaFrame, isFirstState = playerRecord.chickynoid:ConstructPlayerStateDelta(self.serverTotalFrames)
+
+			event.playerStateDelta = playerStateDelta
+			event.playerStateDeltaFrame = playerStateDeltaFrame
+
+			if (isFirstState == true) then
+				--since we're sending the full simulation, use a reliable remote
+				playerRecord:SendEventToClient(event)
+			else
+				playerRecord:SendUnreliableEventToClient(event)	
+			end
+			
 			
 			--Clear the error state flag 
 			playerRecord.chickynoid.errorState = Enums.NetworkProblemState.None

@@ -422,13 +422,13 @@ function ServerChickynoid:ConstructPlayerStateDelta(serverFrame : number)
 	local currentState = self.simulation:WriteState()
 	if (self.lastSeenState == nil) then
 		self.storedStates[serverFrame] = DeltaTable:DeepCopy(currentState)
-		return currentState, nil
+		return currentState, nil, true
 	end
 	
 	--we have one!	
     local stateDelta = DeltaTable:MakeDeltaTable(self.lastSeenState, currentState)
 	self.storedStates[serverFrame] = DeltaTable:DeepCopy(currentState)
-	return stateDelta, self.lastConfirmedPlayerStateFrame
+	return stateDelta, self.lastConfirmedPlayerStateFrame, false
 end
 
 
