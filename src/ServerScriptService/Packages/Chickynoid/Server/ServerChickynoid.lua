@@ -105,8 +105,8 @@ function ServerChickynoid:Destroy()
     end
 end
 
-function ServerChickynoid:HandleEvent(server, event)
-    self:HandleClientUnreliableEvent(server, event, false)
+function ServerChickynoid:HandleEvent(server, event, isBotEvent)
+    self:HandleClientUnreliableEvent(server, event, false, isBotEvent)
 end
 
 --[=[
@@ -228,15 +228,29 @@ end
 	@param event table -- The event sent by the client.
 	@private
 ]=]
-function ServerChickynoid:HandleClientUnreliableEvent(server, event, fakeCommand)
+function ServerChickynoid:HandleClientUnreliableEvent(server, event, fakeCommand, isBotEvent)
 
 	if (event[2] ~= nil) then
-		local prevCommand = CommandLayout:DecodeCommand(event[2])
+		local prevCommand
+
+		if (isBotEvent == true) then
+			prevCommand = event[2]
+		else
+			prevCommand = CommandLayout:DecodeCommand(event[2])
+		end
+		
 		self:ProcessCommand(server, prevCommand, fakeCommand, true)
 	end
 	
 	if (event[1] ~= nil) then
-		local command = CommandLayout:DecodeCommand(event[1])		
+		local command
+
+		if (isBotEvent == true) then
+			command = event[1]
+		else
+			command = CommandLayout:DecodeCommand(event[1])
+		end
+
 		self:ProcessCommand(server, command, fakeCommand, false)
 	end
 end

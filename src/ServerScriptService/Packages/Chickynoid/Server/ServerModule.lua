@@ -383,6 +383,12 @@ function ServerModule:SendWorldState(playerRecord)
 	if (playerRecord.loaded == false) then
 		return
 	end
+
+	if (playerRecord.dummy == true) then
+		--Don't compile world state for bots
+		playerRecord.pendingWorldState = false
+		return
+	end
 	
     local event = {}
     event.t = Enums.EventType.WorldState

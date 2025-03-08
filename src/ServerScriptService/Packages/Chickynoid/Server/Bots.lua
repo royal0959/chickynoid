@@ -117,10 +117,10 @@ function module:MakeBots(Server, numBots)
 			if (math.random() < 0.01) then
 				playerRecord.waitTime = math.random() * 5                
 			end 
-			event[1] = CommandLayout:EncodeCommand(command)
+			event[1] = command
 			playerRecord.frame += 1
 			if (playerRecord.chickynoid) then
-				playerRecord.chickynoid:HandleEvent(Server, event)
+				playerRecord.chickynoid:HandleEvent(Server, event, true)
 			end
 		end
 	end
